@@ -14,6 +14,7 @@ public:
     {
         // unit ball at the center
         _radius = 1;
+        this->material = nullptr;
     }
 
     Sphere(const Vector3f &center, float radius, Material *material)
@@ -21,6 +22,7 @@ public:
     {
         //
         _radius = radius;
+        this->material = material;
     }
 
     ~Sphere() override = default;
@@ -77,6 +79,7 @@ public:
 protected:
     Vector3f _center;
     float _radius;
+    Material *material;
 };
 
 #endif

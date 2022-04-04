@@ -9,27 +9,49 @@
 // function: ax+by+cz=d
 // choose your representation , add more fields and fill in the functions
 
-class Plane : public Object3D {
+class Plane : public Object3D
+{
 public:
-    Plane() {
-
+    Plane() : n(Vector3f())
+    {
+        D = 0;
+        this->material = nullptr;
     }
 
-    Plane(const Vector3f &normal, float d, Material *m) : Object3D(m) {
-
+    Plane(const Vector3f &normal, float d, Material *m) : Object3D(m), n(normal)
+    {
+        D = d;
+        this->material = material;
+        n.normalize();
     }
 
     ~Plane() override = default;
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
-        return false;
+    bool intersect(const Ray &r, Hit &h, float tmin) override
+    {
+        Vector3f Ro = r.getOrigin();
+        Vector3f Rd = r.getDirection();
+        if (Vector3f::dot(n, Rd) == 0)
+        {
+            return false;
+        }
+        else
+        {
+            float t = -(D + Vector3f::dot(n, Ro)) / (Vector3f::dot(n, Rd));
+            if (t < tmin)
+                return false;
+            else
+            {
+                h.set(t, this->material, n);
+                return true;
+            }
+        }
     }
 
 protected:
-
-
+    Vector3f n;
+    float D;
+    Material *material;
 };
 
-#endif //PLANE_H
-		
-
+#endif // PLANE_H
