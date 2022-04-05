@@ -5,7 +5,7 @@
 #include <vecmath.h>
 #include <cmath>
 
-// TODO: Implement functions and add more fields as necessary
+// --V--TODO: Implement functions and add more fields as necessary
 
 class Sphere : public Object3D
 {

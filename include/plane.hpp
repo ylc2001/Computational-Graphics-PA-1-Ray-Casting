@@ -5,7 +5,7 @@
 #include <vecmath.h>
 #include <cmath>
 
-// TODO: Implement Plane representing an infinite plane
+// --V--TODO: Implement Plane representing an infinite plane
 // function: ax+by+cz=d
 // choose your representation , add more fields and fill in the functions
 
@@ -31,7 +31,7 @@ public:
     {
         Vector3f Ro = r.getOrigin();
         Vector3f Rd = r.getDirection();
-        if (Vector3f::dot(n, Rd) == 0)
+        if (fabs(Vector3f::dot(n, Rd)) < 0.00001)
         {
             return false;
         }
