@@ -9,7 +9,7 @@ static Vector3f transformPoint(const Matrix4f &mat, const Vector3f &point) {
     return (mat * Vector4f(point, 1)).xyz();
 }
 
-// transform a 3D directino using a matrix, returning a direction
+// transform a 3D direction using a matrix, returning a direction
 static Vector3f transformDirection(const Matrix4f &mat, const Vector3f &dir) {
     return (mat * Vector4f(dir, 0)).xyz();
 }
