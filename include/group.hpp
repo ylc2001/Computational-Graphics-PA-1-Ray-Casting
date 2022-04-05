@@ -30,10 +30,28 @@ public:
     bool intersect(const Ray &r, Hit &h, float tmin) override
     {
         bool result = false;
+        float current_t;
+        float min_t = 10000000000;
+        int min_index = -1;
         for (int index = 0; index < objects.size(); index++)
         {
-            result |= objects[index]->intersect(r, h, tmin);
+            bool is_intersect = objects[index]->intersect(r, h, tmin);
+            if (is_intersect)
+            {
+                result = true;
+                current_t = h.getT();
+                if (current_t < min_t)
+                {
+                    min_t = current_t;
+                    min_index = index;
+                }
+            }
         }
+        if (result)
+        {
+            objects[min_index]->intersect(r, h, tmin);
+        }
+        return result;
     }
 
     void addObject(int index, Object3D *obj)
