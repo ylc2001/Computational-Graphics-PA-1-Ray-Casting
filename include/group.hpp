@@ -67,7 +67,7 @@ public:
 
 private:
     int num_objects;
-    vector<Object3D *> objects;
+    std::vector<Object3D *> objects;
 };
 
 #endif
