@@ -38,42 +38,43 @@ int main(int argc, char *argv[])
     // pixel in your output image.
 
     SceneParser sceneParser(argv[1]);
-    Camera *camera = sceneParser.getCamera();
+    PerspectiveCamera *camera = (PerspectiveCamera*)sceneParser.getCamera();
     Image renderedImage(camera->getWidth(), camera->getHeight());
 
     for (int x = 0; x < camera->getWidth(); ++x)
     {
         for (int y = 0; y < camera->getHeight(); ++y)
         {
-            //// 计算当前像素(x,y)处相机出射光线camRay
-            //Ray camRay = camera->generateRay(Vector2f(x, y));
-            //Group *baseGroup = sceneParser.getGroup();
-            //Hit hit;
-            //// 判断camRay是否和场景有交点，并返回最近交点的数据，存储在hit中
-            //bool isIntersect = baseGroup->intersect(camRay, hit, 0);
-            //if (isIntersect)
-            //{
-            //    Vector3f finalColor = Vector3f::ZERO;
-            //    // 找到交点之后，累加来自所有光源的光强影响
-            //    for (int li = 0; li < sceneParser.getNumLights(); ++li)
-            //    {
-            //        Light *light = sceneParser.getLight(li);
-            //        Vector3f L, lightColor;
-            //        // 获得光照强度
-            //        light->getIllumination(camRay.pointAtParameter(hit.getT()), L, lightColor);
-            //        // 计算局部光强
-            //        finalColor += hit.getMaterial()->Shade(camRay, hit, L, lightColor);
-            //    }
-            //    renderedImage.SetPixel(x, y, finalColor);
-            //}
-            //else
-            //{
-            //    // 不存在交点，返回背景色
-            //    renderedImage.SetPixel(x, y, sceneParser.getBackgroundColor());
-            //}
-            renderedImage.SetPixel(x, y, Vector3f((float)x/200, (float)y/200, 0.5));
+            // 计算当前像素(x,y)处相机出射光线camRay
+            Ray camRay = camera->generateRay(Vector2f(x, y));
+            Group *baseGroup = sceneParser.getGroup();
+            Hit hit;
+            // 判断camRay是否和场景有交点，并返回最近交点的数据，存储在hit中
+            bool isIntersect = baseGroup->intersect(camRay, hit, 0);
+            if (isIntersect)
+            {
+                Vector3f finalColor = Vector3f::ZERO;
+                // 找到交点之后，累加来自所有光源的光强影响
+                for (int li = 0; li < sceneParser.getNumLights(); ++li)
+                {
+                    Light *light = sceneParser.getLight(li);
+                    Vector3f L, lightColor;
+                    // 获得光照强度
+                    light->getIllumination(camRay.pointAtParameter(hit.getT()), L, lightColor);
+                    // 计算局部光强
+                    finalColor += hit.getMaterial()->Shade(camRay, hit, L, lightColor);
+                }
+                renderedImage.SetPixel(x, y, finalColor);
+            }
+            else
+            {
+                // 不存在交点，返回背景色
+                renderedImage.SetPixel(x, y, sceneParser.getBackgroundColor());
+            }
+            //renderedImage.SetPixel(x, y, Vector3f((float)x/200, (float)y/200, 0.5));
         }
     }
+    cout << "Render complete. saving to ... " << argv[2] << endl;
     renderedImage.SaveImage(argv[2]);
     cout << "Hello! Computer Graphics!" << endl;
     return 0;
