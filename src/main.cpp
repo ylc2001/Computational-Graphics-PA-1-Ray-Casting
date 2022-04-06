@@ -74,8 +74,7 @@ int main(int argc, char *argv[])
             //renderedImage.SetPixel(x, y, Vector3f((float)x/200, (float)y/200, 0.5));
         }
     }
-    cout << "Render complete. saving to ... " << argv[2] << endl;
+    cout << "---------------Render complete. saving to ... " << argv[2] << endl;
     renderedImage.SaveImage(argv[2]);
-    cout << "Hello! Computer Graphics!" << endl;
     return 0;
 }
