@@ -61,7 +61,7 @@ public:
         int cx = this->getWidth() / 2;
         int cy = this->getHeight() / 2;
         // Vector3f direction = Vector3f((u - cx) / Fx, (cy - v) / Fy, 1);
-        Vector3f Ray_direction = ((u - cx) / Fx) * this->horizontal + ((cy - v) / Fy) * this->up + this->direction;
+        Vector3f Ray_direction = ((u - cx) / Fx) * this->horizontal + ((v - cy) / Fy) * this->up + this->direction;
         Ray_direction.normalize();
         return Ray(this->center, Ray_direction);
     }

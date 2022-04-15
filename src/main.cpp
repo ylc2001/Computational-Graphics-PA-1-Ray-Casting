@@ -63,7 +63,9 @@ int main(int argc, char *argv[])
                     light->getIllumination(camRay.pointAtParameter(hit.getT()), L, lightColor);
                     // 计算局部光强
                     finalColor += hit.getMaterial()->Shade(camRay, hit, L, lightColor);
+                    //cout << "shade done" << endl;
                 }
+                //cout << "after" << endl;
                 renderedImage.SetPixel(x, y, finalColor);
             }
             else
