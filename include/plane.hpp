@@ -21,8 +21,6 @@ public:
     Plane(const Vector3f &normal, float d, Material *m) : Object3D(m), n(normal)
     {
         D = d;
-        this->material = material;
-        n.normalize();
     }
 
     ~Plane() override = default;
@@ -38,11 +36,14 @@ public:
         else
         {
             float t = -(D + Vector3f::dot(n, Ro)) / (Vector3f::dot(n, Rd));
-            if (t < tmin)
+            if (t <= tmin || t >= h.getT())
                 return false;
             else
             {
-                h.set(t, this->material, n);
+                if (Vector3f::dot(n, Rd) > 0)
+                    h.set(t, material, -n);
+                else
+                    h.set(t, material, n);
                 return true;
             }
         }
@@ -51,7 +52,6 @@ public:
 protected:
     Vector3f n;
     float D;
-    Material *material;
 };
 
 #endif // PLANE_H

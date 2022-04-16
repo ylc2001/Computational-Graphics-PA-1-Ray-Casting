@@ -10,19 +10,17 @@
 class Sphere : public Object3D
 {
 public:
-    Sphere() : _center(Vector3f())
+    Sphere()
     {
         // unit ball at the center
         _radius = 1;
-        this->material = nullptr;
+        _center = Vector3f(0.0, 0.0, 0.0);
     }
 
     Sphere(const Vector3f &center, float radius, Material *material)
-        : Object3D(material), _center(center)
+        : Object3D(material), _center(center), _radius(radius)
     {
         //
-        _radius = radius;
-        this->material = material;
     }
 
     ~Sphere() override = default;
@@ -57,17 +55,15 @@ public:
                 else if (min(t_1, t_2) < tmin)
                 {
                     result_t = max(t_1, t_2);
-                    // return true;
                 }
                 else
                 {
                     result_t = min(t_1, t_2);
-                    // return true;
                 }
             }
             Vector3f n = Ro + (result_t * Rd) - Pc; //法向量
             n.normalize();
-            h.set(result_t, this->material, n);
+            h.set(result_t, material, n);
             return true;
         }
         else
@@ -79,7 +75,6 @@ public:
 protected:
     Vector3f _center;
     float _radius;
-    Material *material;
 };
 
 #endif

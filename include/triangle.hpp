@@ -23,59 +23,44 @@ public:
 		vertices[0] = a;
 		vertices[1] = b;
 		vertices[2] = c;
-		this->material = material;
-		u = vertices[1] - vertices[0];
-		v = vertices[2] - vertices[0];
-		normal = Vector3f::cross(u, v);
-		normal.normalize();
+		Vector3f E1 = vertices[1] - vertices[0];
+		Vector3f E2 = vertices[2] - vertices[0];
+		normal = Vector3f::cross(E1, E2).normalized();
 	}
 
 	bool intersect(const Ray &ray, Hit &hit, float tmin) override
 	{
 		Vector3f Ro = ray.getOrigin();
 		Vector3f Rd = ray.getDirection();
-		if (fabs(Vector3f::dot(normal, Rd)) < 0.00001)
+		Vector3f P = Vector3f::cross(Rd, E2);
+		float det = Vector3f::dot(E1, P);
+		if (fabs(Vector3f::dot(Rd, normal)) > 1e-9)
 		{
-			return false;
-		}
-		else
-		{
-			Vector3f w0 = Ro - vertices[0];
-			float D = -Vector3f::dot(w0, normal);
-			float t = -(D + Vector3f::dot(normal, Ro)) / (Vector3f::dot(normal, Rd));
-			if (t < tmin)
+			Vector3f S = Ro - vertices[0];
+			float u = Vector3f::dot(S, P) / det;
+			if (u < 0 || u > 1)
 				return false;
+
+			Vector3f Q = Vector3f::cross(S, E1);
+			float v = Vector3f::dot(Rd, Q) / det;
+			if (v < 0 || u + v > 1)
+				return false;
+
+			float t = Vector3f::dot(E2, Q) / det;
+
+			if (Vector3f::dot(Rd, normal) > 0)
+				hit.set(t, material, -normal);
 			else
-			{
-				Vector3f interPoint = Ro + t * Rd;
-				float uu = Vector3f::dot(u, u);
-				float uv = Vector3f::dot(u, v);
-				float vv = Vector3f::dot(v, v);
-				Vector3f w = interPoint - vertices[0];
-				float wu = Vector3f::dot(w, u);
-				float wv = Vector3f::dot(w, v);
-				float A = uv * uv - uu * vv;
-
-				float test1 = (uv * wv - vv * wu) / D;
-				if (test1 < 0.0f || test1 > 1.0f) // I is outside T
-					return false;
-
-				float test2 = (uv * wu - uu * wv) / D;
-				if (test2 < 0.0f || (test1 + test2) > 1.0f) // I is outside T
-					return false;
-
-				hit.set(t, this->material, normal);
-				return true; // 交点在三角形内部
-			}
+				hit.set(t, material, normal);
+			return true;
 		}
+		return false;
 	}
 	Vector3f normal;
 	Vector3f vertices[3];
 
 protected:
-	//Vector3f a, b, c, n, 
-	Vector3f u, v;
-	Material *material;
+	Vector3f E1, E2;
 };
 
 #endif // TRIANGLE_H
