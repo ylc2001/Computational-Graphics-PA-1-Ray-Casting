@@ -9,8 +9,6 @@ using namespace std;
 
 // --V--TODO: implement this class and add more fields as necessary,
 
-// reference: https://blog.csdn.net/linolzhang/article/details/55548707
-
 class Triangle : public Object3D
 {
 

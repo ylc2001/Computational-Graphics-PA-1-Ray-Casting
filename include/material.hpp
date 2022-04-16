@@ -14,9 +14,6 @@ class Material
 public:
     explicit Material(const Vector3f &d_color, const Vector3f &s_color = Vector3f::ZERO, float s = 0) : diffuseColor(d_color), specularColor(s_color), shininess(s)
     {
-        //std::cout << "material created: " << std::endl;
-        //diffuseColor.print();
-        //specularColor.print();
     }
 
     virtual ~Material() = default;
@@ -41,12 +38,12 @@ public:
         if (specular < 0)
             specular = 0;
         specular = pow(specular, shininess);
-        //std::cout << "in shade 1" << std::endl;
-        //std::cout << diffuse  << "  " << specular << std::endl;
-        //this->diffuseColor.print();
-        //this->specularColor.print();
+        // std::cout << "in shade 1" << std::endl;
+        // std::cout << diffuse  << "  " << specular << std::endl;
+        // this->diffuseColor.print();
+        // this->specularColor.print();
         Vector3f m_result = (diffuseColor * diffuse) + (specularColor * specular);
-        //std::cout << "in shade 2" << std::endl;
+        // std::cout << "in shade 2" << std::endl;
         shaded.x() = lightColor.x() * m_result.x();
         shaded.y() = lightColor.y() * m_result.y();
         shaded.z() = lightColor.z() * m_result.z();

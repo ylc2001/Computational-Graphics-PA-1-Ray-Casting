@@ -29,7 +29,6 @@ public:
     virtual bool intersect(const Ray &r, Hit &h, float tmin) {
         Vector3f trSource = transformPoint(transform, r.getOrigin());
         Vector3f trDirection = transformDirection(transform, r.getDirection());
-        trDirection.normalize();
         Ray tr(trSource, trDirection);
         bool inter = o->intersect(tr, h, tmin);
         if (inter) {

@@ -15,7 +15,6 @@ public:
     Plane() : n(Vector3f())
     {
         D = 0;
-        this->material = nullptr;
     }
 
     Plane(const Vector3f &normal, float d, Material *m) : Object3D(m), n(normal)
@@ -29,24 +28,21 @@ public:
     {
         Vector3f Ro = r.getOrigin();
         Vector3f Rd = r.getDirection();
-        if (fabs(Vector3f::dot(n, Rd)) < 0.00001)
+        if (Vector3f::dot(n, Rd) > 1e-9 || Vector3f::dot(n, Rd) <-1e-9)
         {
-            return false;
-        }
-        else
-        {
-            float t = -(D + Vector3f::dot(n, Ro)) / (Vector3f::dot(n, Rd));
+            float t = (D - Vector3f::dot(n, Ro)) / (Vector3f::dot(n, Rd));
             if (t <= tmin || t >= h.getT())
                 return false;
             else
             {
                 if (Vector3f::dot(n, Rd) > 0)
-                    h.set(t, material, -n);
+                    h.set(t, material, -n.normalized());
                 else
-                    h.set(t, material, n);
+                    h.set(t, material, n.normalized());
                 return true;
             }
         }
+       return false;
     }
 
 protected:
